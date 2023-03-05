@@ -15,7 +15,7 @@ public class MinStack {
 
     public int pop() {
         if (stack.isEmpty())
-            throw new IllegalArgumentException();
+            throw new IllegalStateException();
 
         var top = stack.pop();
 
@@ -23,7 +23,6 @@ public class MinStack {
             minStack.pop();
 
         return top;
-
     }
 
     public int min() {

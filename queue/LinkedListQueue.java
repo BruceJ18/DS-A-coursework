@@ -1,6 +1,7 @@
 package datastructures.queue;
 
 
+import java.util.ArrayList;
 
 public class LinkedListQueue {
     private class Node {
@@ -15,8 +16,8 @@ public class LinkedListQueue {
     private Node tail;
     private int size;
 
-    public void enqueue(int item) {
-        var node = new Node(item);
+    public void enqueue(int value) {
+        var node = new Node(value);
         if (isEmpty()) {
             head = tail = node;
         }
@@ -27,33 +28,44 @@ public class LinkedListQueue {
         size++;
     }
 
-    public int dequeue() {return removeType(true);}
+    public int dequeue() {
+        if (isEmpty())
+            throw new IllegalStateException();
 
-    public int peek() {return head.value;}
+        int value;
+        if (head == tail) {
+            value = head.value;
+            head = tail = null;
+        }
+        else {
+            value = head.value;
+            var second = head.next;
+            head.next = null;
+            head = second;
+        }
+        size--;
+        return value;
+    }
+
+    public int peek() {
+        if (isEmpty())
+            throw new IllegalStateException();
+        return head.value;
+    }
 
     public int size(){return size;}
 
     public boolean isEmpty() {return size == 0;}
 
-    private int removeType(boolean pop) {
-        if (isEmpty())
-            throw new IllegalStateException();
+    public String toString() {
+        ArrayList<Integer> list = new ArrayList<>();
 
-        int value;
-        if (head == tail){
-            value = head.value;
-            if (pop)
-                head = tail = null;
+        var current = head;
+        while (current != null) {
+            list.add(current.value);
+            current = current.next;
         }
-        else {
-            value = head.value;
-            var second = head.next;
-            if (pop)
-                head.next = null;
-            head = second;
-        }
-        if (pop)
-            size--;
-        return value;
+        return list.toString();
     }
+
 }

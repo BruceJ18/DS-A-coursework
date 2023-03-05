@@ -3,89 +3,93 @@ package datastructures.array;
 
 
 public class DynammicArray {
-    private int[] items;
+    private int[] array;
     private int count;
 
-    public DynammicArray(int length){
-        items = new int[length];
 
-    }
-    private void resizeIfRequired() {
-        if (items.length == count) {
-            int[] newItems = new int[count * 2];
-
-            for (int i = 0; i < count; i++)
-                newItems[i] = items[i];
-
-            items = newItems;
-        }
+    public DynammicArray(int capacity) {
+        array = new int[capacity];
     }
 
     public void insert(int item) {
-        resizeIfRequired();
-        items[count++] = item;
+        resize();
+        array[count++] = item;
     }
 
-    public void remove(int index) {
-        if ( index < 0 || index >= count)
+    public void insertAt(int item, int index) {
+        if (index < 0 || index >= count)
             throw new IllegalArgumentException();
 
-        for (int i = index; i < count; i++)
-            items[i] = items[i+1];
+        resize();
+        for (int i = count - 1; i >= index; i--)
+            array[i + 1] = array[i];
 
-        count--;
+        array[index] = item;
+        count++;
     }
 
     public int indexOf(int item) {
-        for (int i = 0; i < count; i++){
-            if (items[i] == item)
+        for (int i = 0; i < count; i++) {
+            if (array[i] == item)
                 return i;
         }
         return -1;
     }
 
-    public int max(){
-        int maxNum = items[0];
-
-        for (int j : items) {
-            if (j > maxNum)
-                maxNum = j;
-        }
-
-        return maxNum;
-    }
-
-    public DynammicArray intersect(DynammicArray otherArray) {
-       var intersection = new DynammicArray(count);
-
-       for (int item : items){
-           if (otherArray.indexOf(item) >= 0)
-               intersection.insert(item);
-       }
-       return intersection;
-    }
-
     public void reverse() {
-        int[] newItems = new int[count];
+        int[] reverse = new int[count];
 
         for (int i = 0; i < count; i++)
-            newItems[i] = items[count - i - 1];
-
-        items = newItems;
+            array[i] = reverse[count - i - 1];
+        array = reverse;
     }
 
-    public void insertAt(int item, int index) {
-        if ( index < 0 || index >= count)
+    public void resize() {
+        if (array.length == count) {
+            int[] newArray = new int[count * 2];
+
+            int index = 0;
+            for (int item : array)
+                newArray[index++] = item;
+
+            array = newArray;
+        }
+    }
+
+    public void removeAt(int index) {
+        if (index < 0 || index >= count)
             throw new IllegalArgumentException();
-        resizeIfRequired();
-        for (int i = count -1; i >= index; i--)
-            items[i+1] = items[i];
-        items[index] = item;
-        count++;
+
+        for (int i = index; i < count; i++)
+            array[i] = array[i + 1];
+        count--;
+    }
+
+    public int max() {
+        int max = 0;
+        for (int i = 0; i < count; i++) {
+            if (max < array[i])
+                max = array[i];
+        }
+        return max;
     }
 
     public void print() {
         for (int i = 0; i < count; i++)
-            System.out.println(items[i]);
+            System.out.println(array[i]);
+    }
+
+    public DynammicArray intersect(DynammicArray other) {
+        var intersection = new DynammicArray(count);
+
+        for (int item: array) {
+            if (other.indexOf(item) >= 0)
+                intersection.insert(item);
+        }
+        return intersection;
+    }
+
+    private boolean isEmpty() {
+        return count == 0;
     }
 }

@@ -12,7 +12,7 @@ public class LinkedListHashTable {
         }
     }
 
-    private LinkedList<Entry>[] entries = new LinkedList[5];
+    private LinkedList<Entry>[] mainChain = new LinkedList[5];
 
     public void put(int key, String value) {
         var entry = getEntry(key);
@@ -21,7 +21,7 @@ public class LinkedListHashTable {
             return;
         }
 
-        getOrCreateBucket(key).add(new Entry(key, value));
+        createSideChain(key).add(new Entry(key, value));
     }
 
     public String get(int key) {
@@ -33,38 +33,35 @@ public class LinkedListHashTable {
         var entry = getEntry(key);
         if (entry == null)
             throw new IllegalStateException();
-        getBucket(key).remove(entry);
+        getSideChain(key).remove(entry);
 
     }
 
-    private LinkedList<Entry> getBucket(int key) {
-        return  entries[hashFunction(key)];
+    private LinkedList<Entry> getSideChain(int key) {
+        return  mainChain[hashFunction(key)];
     }
 
     private Entry getEntry(int key){
-        var bucket = getBucket(key);
-        if (bucket != null) {
-            for (var entry : bucket) {
-                if (entry.key == key) {
+        var sideChain = getSideChain(key);
+        if (sideChain != null) {
+            for (var entry : sideChain) {
+                if (entry.key == key)
                     return entry;
-                }
             }
         }
         return null;
     }
 
     private int hashFunction(int key) {
-        return key % entries.length;
+        return key % mainChain.length;
     }
 
-private LinkedList<Entry> getOrCreateBucket(int key) {
+    private LinkedList<Entry> createSideChain(int key) {
         var index = hashFunction(key);
-        var bucket = entries[index];
-        if (bucket == null)
-            entries[index] = new LinkedList<>();
+        var sideChain = mainChain[index];
+        if (sideChain == null)
+            mainChain[index] = new LinkedList<>();
 
-        return bucket;
-
-
-}
+        return sideChain;
+    }
 }

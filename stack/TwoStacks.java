@@ -23,11 +23,25 @@ public class TwoStacks {
         items[++top1] = item;
     }
 
+    public void push2(int item) {
+        if (isFull2())
+            throw new IllegalStateException();
+
+        items[--top2] = item;
+    }
+
     public int pop1() {
         if (isEmpty1())
             throw new IllegalStateException();
 
         return items[top1--];
+    }
+
+    public int pop2() {
+        if (isEmpty1())
+            throw new IllegalStateException();
+
+        return items[top2++];
     }
 
     private boolean isEmpty1(){
@@ -36,20 +50,6 @@ public class TwoStacks {
 
     private boolean isFull1(){
         return top1 + 1 == top2;
-    }
-
-    public void push2(int item) {
-        if (isFull1())
-            throw new IllegalStateException();
-
-        items[--top2] = item;
-    }
-
-    public int pop2() {
-        if (isEmpty1())
-            throw new IllegalStateException();
-
-        return items[top2++];
     }
 
     private boolean isEmpty2(){

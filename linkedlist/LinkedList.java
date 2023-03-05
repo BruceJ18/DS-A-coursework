@@ -82,19 +82,14 @@ public class LinkedList {
     private Node getPrevious(Node node) {
         var current = first;
         while (current != node) {
-            if (current.next == last) return current;
+            if (current.next == last)
+                return current;
             current = current.next;
         }
         return null;
     }
 
-    //contains
-    public boolean contains(int item) {
-        return indexOf(item) != -1;
-    }
 
-
-    //indexOf
     public int indexOf(int item) {
         int index = 0;
         var current = first;
@@ -104,6 +99,9 @@ public class LinkedList {
             index++;
         }
         return -1;
+    }
+    public boolean contains(int item) {
+        return indexOf(item) != -1;
     }
 
     public int size() {
